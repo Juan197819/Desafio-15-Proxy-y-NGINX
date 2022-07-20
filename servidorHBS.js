@@ -271,7 +271,7 @@ if (!arg.CLUSTER&&!arg.cluster) {
     
     }else{
       console.log(`Proceso Worker ${process.pid} Iniciado`);
-
+      
       const connectedServer = httpServer.listen(PORT, () => {
         console.log(`Servidor con Websockets en el puerto ${connectedServer.address().port}`);
       });
@@ -281,20 +281,25 @@ if (!arg.CLUSTER&&!arg.cluster) {
     } 
 } 
              
+//----ARGUMENTOS POR CONSOLA:
+
+// argumento para puerto: -p o --port
+// argumento para modo Cluster: --cluster o --CLUSTER (Modo fork por defecto)
+
 //---------------------------------------COMANDOS PARA INICIAR  SERVIDOR:----------------
 
 //-----------------------CON NODE:----------------
-//node servidorHBS.js --CLUSTER        --->Modo cluster
-//node servidorHBS.js --FORK           --->Modo fork
-//node servidorHBS.js                  --->por defecto  servidor en modo fork
+//node servidorHBS.js --CLUSTER -p 8081       --->Modo cluster
+//node servidorHBS.js --FORK    -p 8080       --->Modo fork
+//node servidorHBS.js          -p 8080        --->por defecto  servidor en modo fork
 
 //---------------------CON NODEMON:----------------
-//nodemon servidorHBS.js --CLUSTER       --->Modo cluster
-//nodemon servidorHBS.js --FORK          --->Modo fork
+//nodemon servidorHBS.js --CLUSTER -port 8081     --->Modo cluster
+//nodemon servidorHBS.js --FORK -port 8080        --->Modo fork
 //nodemon servidorHBS.js                 --->por defecto servidor en modo fork 
  
 //---------------------CON FOREVER-----------------
-//forever servidorHBS.js                 
+//forever servidorHBS.js -p 8080              
 //forever list                            --->Listar procesos por FOREVER
 
 //---------------------CON PM2-----------------
@@ -307,7 +312,7 @@ if (!arg.CLUSTER&&!arg.cluster) {
 //tasklist /fi "imagename eq nginx.exe"    --->Listar procesos NGYNX por SISTEMA OPERATIVO
 
 //------------RUTA Y COMANDOS NGYNX-------------
-//nginx.exe -s reload
+//./nginx.exe -s reload
 //C:\Users\juanp\OneDrive\Escritorio\Programas para instalar\nginx-1.23.0
 
 //------------------COMANDO BD MONGO--------------
