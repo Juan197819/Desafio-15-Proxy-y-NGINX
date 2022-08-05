@@ -1,5 +1,5 @@
 import 'dotenv/config'
-
+import ContenedorMongoDb from './contenedores/contenedorMongoDB.js'
 let daoCarrito,daoProducto,daoMensaje,daoUsuario
 console.log(`Persistencia elegida via archivo .env:  ${process.env.PERSISTENCIA}`)
 
@@ -14,7 +14,7 @@ switch (process.env.PERSISTENCIA) {
         daoCarrito = new DaoCarritosMongo()
         daoMensaje = new DaoMensajesMongo()
         daoUsuario = new DaoUsuariosMongo()
-
+        ContenedorMongoDb.iniciarPersistencia()
     break;
 
     case 'firebase':

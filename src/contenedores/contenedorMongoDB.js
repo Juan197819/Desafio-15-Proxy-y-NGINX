@@ -2,18 +2,30 @@ import mongoose from 'mongoose'
 import 'dotenv/config'
 
 
-try {
-    const url = `mongodb://${process.env.HOST_MONGO}:${process.env.PORT_MONGO}/ecommerce` 
-    await mongoose.connect(url)
-    console.log('Base de datos MongoDB conectada')
-} catch (error) {
-    console.log('Error en la conexion de MongoDB', error)
-}
+// try {
+//     const url = `mongodb://${process.env.HOST_MONGO}:${process.env.PORT_MONGO}/ecommerce` 
+//     await mongoose.connect(url)
+//     console.log('Base de datos MongoDB conectada')
+// } catch (error) {
+//     console.log('Error en la conexion de MongoDB', error)
+// }
 
 class ContenedorMongoDb{
     constructor(nombreColleccion, Schema){
         this.colleccion = mongoose.model(nombreColleccion, Schema)
     }
+
+    static async iniciarPersistencia(){
+        try {
+            const url = `mongodb://${process.env.HOST_MONGO}:${process.env.PORT_MONGO}/ecommerce` 
+            await mongoose.connect(url)
+            console.log('Base de datos MongoDB conectada')
+        } catch (error) {
+            console.log('Error en la conexion de MongoDB', error)
+        }
+        
+    }
+
     async leer(id){
         let parametroBusqueda = {}
         if(id){

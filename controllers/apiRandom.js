@@ -12,14 +12,17 @@ const apiRandom = (req, res) => {
     console.log('arg.CLUSTER')
     console.log(arg.CLUSTER)
 
-    if (!arg.cluster&&!arg.CLUSTER) {
+    if (!arg.cluster&&!arg.CLUSTER&&!arg.FORK&&!arg.fork)  {
 
 //EN MODO FORK SE LEVANTA UN CHILD PROCESS ANTES DE EJECUTAR CALCULO
 
-        const secun = fork(__dirname + '/childProcess.js')
-        secun.send(`${cant}`) 
-        secun.on('message', obj=>{
-            res.send( `PUERTO: ${arg.port}, PID: ${process.pid}   `+ JSON.stringify(obj)); 
+        const child = fork(__dirname + '/childProcess.js')
+        child.send(`${cant}`) 
+        child.on('message', obj=>{
+            res.send( `PUERTO: ${arg.port}, PID: ${child.pid}
+               `+ JSON.stringify(obj)); 
+            console.log(child.pid)
+            child.kill()
         })
     } else{
                 //EN MODO CLUSTER SE EJECUTA DIRECTAMENTE

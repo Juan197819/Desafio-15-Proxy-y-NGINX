@@ -145,8 +145,7 @@ app.get('/', auth,(req, res) => {
 })
 
 app.get('/login', (req, res) => {
-  let r = {port:arg.port}
-  res.render("login",{port:arg.port});
+  res.render("login",{port:arg.p});
 })
 
 app.post('/login', passportAuthLogin, async (req, res) => {
@@ -195,8 +194,7 @@ app.get('/info',  (req, res) => {
     pathEjecucion:process.execPath,
     proccessId:process.pid,
     carpetaProyecto:process.cwd(),
-    cantProcesadores:numCPUS().length,
-    numeroPuerto:arg.port
+    cantProcesadores:numCPUS().length
   }
   res.render("info",info)
 })
@@ -237,14 +235,11 @@ io.on("connection", (socket) => {
   });
 });
 
-
-
-
 //---------------SERVER LISTEN------------------------------
 
 const PORT=arg.port 
 
-if (!arg.CLUSTER&&!arg.cluster) {
+if (!arg.CLUSTER&&!arg.cluster||arg.clusterPM2) {
   console.log('MODO FORK')
 
   const connectedServer = httpServer.listen(PORT, () => {
@@ -260,15 +255,13 @@ if (!arg.CLUSTER&&!arg.cluster) {
     if (cluster.isPrimary) {
     console.log(`Proceso Master ${process.pid} Iniciado`);
 
-    for (let i = 0; i < numCPUS().length; i++) {
-      cluster.fork();
-    }
-
-    cluster.on('exit', (worker) => {
-      console.log(`worker ${worker.process.pid} murio`);
-      cluster.fork();
-    });
-    
+      for (let i = 0; i < numCPUS().length; i++) {
+        cluster.fork();
+      }
+      cluster.on('exit', (worker) => {
+        console.log(`worker ${worker.process.pid} murio`);
+        cluster.fork();
+      });
     }else{
       console.log(`Proceso Worker ${process.pid} Iniciado`);
       
@@ -281,40 +274,4 @@ if (!arg.CLUSTER&&!arg.cluster) {
     } 
 } 
              
-//----ARGUMENTOS POR CONSOLA:
-
-// argumento para puerto: -p o --port
-// argumento para modo Cluster: --cluster o --CLUSTER (Modo fork por defecto)
-
-//---------------------------------------COMANDOS PARA INICIAR  SERVIDOR:----------------
-
-//-----------------------CON NODE:----------------
-//node servidorHBS.js --CLUSTER -p 8081       --->Modo cluster
-//node servidorHBS.js --FORK    -p 8080       --->Modo fork
-//node servidorHBS.js          -p 8080        --->por defecto  servidor en modo fork
-
-//---------------------CON NODEMON:----------------
-//nodemon servidorHBS.js --CLUSTER -port 8081     --->Modo cluster
-//nodemon servidorHBS.js --FORK -port 8080        --->Modo fork
-//nodemon servidorHBS.js                 --->por defecto servidor en modo fork 
- 
-//---------------------CON FOREVER-----------------
-//forever servidorHBS.js -p 8080              
-//forever list                            --->Listar procesos por FOREVER
-
-//---------------------CON PM2-----------------
-//pm2 start servidorHBS.js --name=ServerFORK --watch -- --port 8081      --->Modo fork
-//pm2 start servidorHBS.js --name=ServerCLUSTER --watch -i max -- --port 8081     --->Modo cluster
-
-//--------------Comandos CMD o POWERSHELL-----------------
-//taskkill /pid 13248 /f                  --->Matar proceso por PID
-//tasklist /fi "imagename eq node.exe"    --->Listar procesos NODE por SISTEMA OPERATIVO
-//tasklist /fi "imagename eq nginx.exe"    --->Listar procesos NGYNX por SISTEMA OPERATIVO
-
-//------------RUTA Y COMANDOS NGYNX-------------
-//./nginx.exe -s reload
-//C:\Users\juanp\OneDrive\Escritorio\Programas para instalar\nginx-1.23.0
-
-//------------------COMANDO BD MONGO--------------
-//mongod --dbpath C:\Users\juanp\OneDrive\Escritorio\bd-desafio15
 console.log(arg) 

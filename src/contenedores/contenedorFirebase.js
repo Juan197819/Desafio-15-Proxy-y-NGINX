@@ -17,6 +17,17 @@ class ContenedorFirebase{
         this.colleccion = db.collection(nombreColleccion)
     }
 
+    async iniciarPersistencia(){
+        try {
+            admin.initializeApp({
+                credential: admin.credential.cert(serviceAcount)
+              });
+            console.log('Base de datos FIREBASE conectada')
+        } catch (error) {
+            console.log('Error en la conexion de FIREBASE', error)
+        }
+    }
+
     async leer(id){
         console.log(id)
         if(id){
